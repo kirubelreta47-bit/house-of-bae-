@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --ink: #0e0b0a;
+    --charcoal: #171211;
+    --charcoal-2: #211a18;
+    --gold: #c7a252;
+    --gold-bright: #e8cd8a;
+    --nude: #e6d3b8;
+    --cream: #f7f1e6;
+    --mocha: #8a6a4f;
+    --line: rgba(199, 162, 82, 0.28);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--ink);
+    color: var(--cream);
+  }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    background-color: var(--ink);
+    color: var(--cream);
+  }
+
+  h1, h2, h3, .font-serif-display {
+    font-family: 'Bodoni Moda', serif;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+}
+
+.eyebrow {
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(180deg, var(--cream) 20%, var(--gold-bright) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Subtle Foil / Glow Texture */
+.foil-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(199, 162, 82, 0.12), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 10%, rgba(199, 162, 82, 0.08), transparent 55%);
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: inline-flex;
+  gap: 2.5rem;
+  animation: scroll 26s linear infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0e0b0a;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(199, 162, 82, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(199, 162, 82, 0.6);
+}
