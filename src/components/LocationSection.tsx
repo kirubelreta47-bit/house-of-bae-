@@ -154,14 +154,17 @@ export const LocationSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Map Frame */}
-          <div className="min-h-[380px] grayscale contrast-105 border-t lg:border-t-0 lg:border-l border-[#c7a252]/30 relative">
-            <iframe
-              src="https://www.google.com/maps?q=Lideta,Addis+Ababa,Ethiopia&output=embed"
-              loading="lazy"
-              className="w-full h-full min-h-[380px] border-0 block"
-              title="House of Bae Lideta Map"
-            />
+          {/* Map Link Button */}
+          <div className="min-h-[200px] border-t lg:border-t-0 lg:border-l border-[#c7a252]/30 relative flex items-center justify-center p-8 bg-[#0e0b0a]/50">
+            <a
+              href="https://www.google.com/maps?q=Lideta,Addis+Ababa,Ethiopia"
+              target="_blank"
+              rel="noreferrer"
+              className="px-8 py-4 bg-[#c7a252] text-[#0e0b0a] font-medium text-xs sm:text-sm tracking-widest uppercase flex items-center gap-3 rounded hover:-translate-y-1 transition-all duration-300 shadow-[0_8px_20px_rgba(199,162,82,0.2)] hover:shadow-[0_12px_25px_rgba(199,162,82,0.35)]"
+            >
+              <MapPin className="w-5 h-5" />
+              Open in Google Maps
+            </a>
           </div>
         </div>
       </div>

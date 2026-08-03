@@ -167,7 +167,7 @@ const initialGallery: GalleryItem[] = [
     finishType: "Mirror Chrome",
     gradient: "linear-gradient(135deg, #2b2320 0%, #0b0908 60%)",
     description: "Deep obsidian mirror glaze with metallic shimmer undertones.",
-    imageUrl: "/src/assets/images/onyx_chrome_nails_1785790542145.jpg",
+    imageUrl: "/images/onyx_chrome_nails_1785790542145.jpg",
   },
   {
     id: "g2",
@@ -176,7 +176,7 @@ const initialGallery: GalleryItem[] = [
     finishType: "Glazed Donut",
     gradient: "linear-gradient(135deg, #e9d8bd 0%, #c9a96f 100%)",
     description: "Hailey-inspired translucent sheer pearl shine over warm nude base.",
-    imageUrl: "/src/assets/images/nude_glaze_nails_1785790556348.jpg",
+    imageUrl: "/images/nude_glaze_nails_1785790556348.jpg",
   },
   {
     id: "g3",
@@ -185,7 +185,7 @@ const initialGallery: GalleryItem[] = [
     finishType: "Hand Foil",
     gradient: "linear-gradient(135deg, #151515 0%, #3a2f1f 70%, #c7a252 100%)",
     description: "Minimalist nude arch with 24k gold leaf foil embedded on tips.",
-    imageUrl: "/src/assets/images/gold_foil_french_1785790568862.jpg",
+    imageUrl: "/images/gold_foil_french_1785790568862.jpg",
   },
   {
     id: "g4",
@@ -194,7 +194,7 @@ const initialGallery: GalleryItem[] = [
     finishType: "Satin Shimmer",
     gradient: "linear-gradient(135deg, #efe2cd 0%, #8a6a4f 100%)",
     description: "Soft rose gold pearlescent silk with fine micro-glitter.",
-    imageUrl: "/src/assets/images/champagne_silk_nails_1785790580027.jpg",
+    imageUrl: "/images/champagne_silk_nails_1785790580027.jpg",
   },
   {
     id: "g5",
@@ -203,7 +203,7 @@ const initialGallery: GalleryItem[] = [
     finishType: "3D Quartz",
     gradient: "linear-gradient(160deg, #1b1b1b 0%, #c7a252 140%)",
     description: "Hand-swirled smoky marble with metallic gold veins.",
-    imageUrl: "/src/assets/images/black_gold_marble_1785790591177.jpg",
+    imageUrl: "/images/black_gold_marble_1785790591177.jpg",
   },
   {
     id: "g6",
@@ -212,7 +212,7 @@ const initialGallery: GalleryItem[] = [
     finishType: "Opaque Cream",
     gradient: "linear-gradient(135deg, #f3ead9 0%, #dcc79a 100%)",
     description: "Ultra-clean milky almond nude with high gloss topcoat.",
-    imageUrl: "/src/assets/images/milk_bar_nude_nails_1785790602182.jpg",
+    imageUrl: "/images/milk_bar_nude_nails_1785790602182.jpg",
   },
 ];
 
