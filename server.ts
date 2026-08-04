@@ -301,7 +301,7 @@ app.get("/api/services", (req, res) => {
 // POST /api/services (Admin)
 app.post("/api/services", (req, res) => {
   const { name, category, price, durationMinutes, description } = req.body;
-  if (!name || !price) {
+  if (!name || price === undefined || price === null) {
     return res.status(400).json({ success: false, error: "Name and price are required" });
   }
   const db = initDB();
@@ -566,7 +566,7 @@ async function startServer() {
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`House of Bae Nail Atelier server listening at http://localhost:${PORT}`);
+    console.log(`House of Bae Nail Studio server listening at http://localhost:${PORT}`);
   });
 }
 

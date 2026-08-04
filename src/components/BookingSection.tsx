@@ -150,7 +150,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
                 Book Your Appointment
               </h2>
               <p className="mt-4 text-[#f7f1e6]/65 text-sm leading-relaxed font-light">
-                Reserve your slot online in real time. Your booking is automatically recorded in our atelier database, and you can confirm instantly via WhatsApp.
+                Reserve your slot online in real time. Your booking is automatically recorded in our studio database, and you can confirm instantly via WhatsApp.
               </p>
             </div>
 
@@ -164,7 +164,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
               </div>
 
               <div className="flex gap-4 items-start">
-                <span className="font-serif-display italic text-[#e8cd8a] min-w-[80px]">Atelier</span>
+                <span className="font-serif-display italic text-[#e8cd8a] min-w-[80px]">Studio</span>
                 <span className="text-[#f7f1e6]/80">
                   Soliyana Building, 2nd Floor, No. 109<br />
                   <span className="text-[#f7f1e6]/50">Lideta, Addis Ababa</span>
@@ -441,6 +441,15 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
                     className="w-full bg-[#171211] border border-[#c7a252]/30 text-[#f7f1e6] px-3.5 py-2.5 text-xs sm:text-sm rounded focus:outline-none focus:border-[#c7a252]"
                   />
                 </div>
+
+                {selectedServiceObj && (
+                  <div className="flex justify-between items-center py-3 border-y border-[#c7a252]/10 mt-4 mb-2">
+                    <span className="text-xs uppercase tracking-widest text-[#f7f1e6]/60">Estimated Charge:</span>
+                    <span className="font-serif-display text-xl text-[#e8cd8a] italic">
+                      {selectedServiceObj.price.toLocaleString()} ETB
+                    </span>
+                  </div>
+                )}
 
                 <button
                   type="submit"

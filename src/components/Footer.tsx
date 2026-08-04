@@ -46,7 +46,7 @@ export const Footer: React.FC = () => {
         {/* Address and Copyright */}
         <div className="text-[11.5px] text-[#f7f1e6]/40 tracking-wider space-y-1 font-light border-t border-[#c7a252]/10 pt-6">
           <p>Soliyana Building, 2nd Floor, No. 109 · Lideta, Addis Ababa, Ethiopia</p>
-          <p>© {new Date().getFullYear()} House of Bae Nail Atelier. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} House of Bae Nail Studio. All rights reserved.</p>
         </div>
       </div>
     </footer>

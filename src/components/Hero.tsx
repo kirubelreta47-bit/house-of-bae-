@@ -16,7 +16,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBookingModal, onExploreService
       <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#c7a252]/30 bg-[#171211]/80 backdrop-blur-md mb-6 animate-fade-in">
         <MapPin className="w-3.5 h-3.5 text-[#c7a252]" />
         <span className="eyebrow text-[10px] sm:text-[11px] text-[#e8cd8a]">
-          Nail Atelier · Lideta, Addis Ababa
+          Nail Studio · Lideta, Addis Ababa
         </span>
       </div>
 
@@ -46,7 +46,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBookingModal, onExploreService
         </button>
       </div>
 
-      {/* Atelier Feature Badges */}
+      {/* Studio Feature Badges */}
       <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 max-w-4xl mx-auto pt-8 border-t border-[#c7a252]/20 text-left">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-[#171211] border border-[#c7a252]/30 rounded-sm text-[#c7a252]">
@@ -83,7 +83,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBookingModal, onExploreService
             <Star className="w-4 h-4 fill-[#c7a252]" />
           </div>
           <div>
-            <div className="text-xs font-medium text-[#e8cd8a]">4.9★ Top Atelier</div>
+            <div className="text-xs font-medium text-[#e8cd8a]">4.9★ Top Studio</div>
             <div className="text-[11px] text-[#f7f1e6]/50">Lideta's Premier Studio</div>
           </div>
         </div>

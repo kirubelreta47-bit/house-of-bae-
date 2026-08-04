@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { ShapeDivider } from "./components/ShapeDivider";
-import { MarqueeTicker } from "./components/MarqueeTicker";
+import { AmbientBackground } from "./components/AmbientBackground";
 import { ServicesSection } from "./components/ServicesSection";
 import { GallerySection } from "./components/GallerySection";
 import { BookingSection } from "./components/BookingSection";
@@ -61,8 +61,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#0e0b0a] text-[#f7f1e6] relative font-sans">
-      {/* Background Foil Overlay */}
-      <div className="foil-bg" />
+      {/* Custom Animated Layer */}
+      <AmbientBackground />
 
       {/* Navigation Header */}
       <Header
@@ -83,7 +83,6 @@ export default function App() {
 
         <ShapeDivider type="drop" />
 
-        <MarqueeTicker />
 
         <ServicesSection
           services={services}

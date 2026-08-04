@@ -182,7 +182,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
             <div>
               <div className="eyebrow text-xs">Studio Owner & Staff</div>
               <h3 className="font-serif-display text-3xl italic text-[#f7f1e6] mt-1">
-                Atelier Management Portal
+                Studio Management Portal
               </h3>
               <p className="text-xs text-[#f7f1e6]/60 mt-2 font-light">
                 Please enter your staff passcode to access appointments, revenue metrics, and menu configuration.

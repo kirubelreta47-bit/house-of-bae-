@@ -42,7 +42,7 @@ export const LocationSection: React.FC = () => {
 
   return (
     <section id="location" className="py-24 border-t border-[#c7a252]/25 relative">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-4xl mx-auto px-6">
         <div className="text-center max-w-xl mx-auto mb-12">
           <div className="eyebrow">Find Us in Addis Ababa</div>
           <h2 className="font-serif-display text-4xl sm:text-5xl italic mt-3 text-[#f7f1e6]">
@@ -50,26 +50,42 @@ export const LocationSection: React.FC = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-[#c7a252]/30 rounded-sm overflow-hidden bg-[#171211]">
-          {/* Location Info & Inquiry Form */}
-          <div className="p-8 sm:p-12 flex flex-col justify-between space-y-8">
-            <div className="space-y-6">
+        <div className="border border-[#c7a252]/30 rounded-sm bg-[#171211] p-8 sm:p-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            
+            {/* Location Info */}
+            <div className="space-y-8">
               <div>
-                <div className="eyebrow text-[10px]">Atelier Address</div>
-                <h3 className="font-serif-display text-2xl sm:text-3xl italic text-[#f7f1e6] mt-1">
+                <div className="eyebrow text-[10px]">Studio Address</div>
+                <h3 className="font-serif-display text-2xl sm:text-3xl italic text-[#f7f1e6] mt-1 mb-4">
                   Lideta, Addis Ababa
                 </h3>
-              </div>
-
-              <div className="space-y-4 text-xs sm:text-sm font-light text-[#f7f1e6]/80">
-                <div className="flex gap-3 items-start">
-                  <MapPin className="w-5 h-5 text-[#c7a252] flex-shrink-0 mt-0.5" />
-                  <div>
-                    Soliyana Building, 2nd Floor, No. 109<br />
-                    Lideta, Addis Ababa, Ethiopia
+                
+                <div className="flex flex-col gap-4">
+                  <div className="flex gap-3 items-start text-sm font-light text-[#f7f1e6]/80">
+                    <MapPin className="w-5 h-5 text-[#c7a252] flex-shrink-0 mt-0.5" />
+                    <div>
+                      Soliyana Building, 2nd Floor, No. 109<br />
+                      Lideta, Addis Ababa, Ethiopia
+                    </div>
+                  </div>
+                  
+                  {/* Minimalist Google Maps Button */}
+                  <div className="pl-8">
+                    <a
+                      href="https://www.google.com/maps?q=Lideta,Addis+Ababa,Ethiopia"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 border border-[#c7a252]/40 text-[#f7f1e6]/60 hover:text-[#e8cd8a] hover:border-[#c7a252] px-4 py-2 text-[10px] uppercase tracking-widest rounded transition-colors"
+                    >
+                      <MapPin className="w-3 h-3" />
+                      <span>Open in Google Maps</span>
+                    </a>
                   </div>
                 </div>
+              </div>
 
+              <div className="space-y-4 text-xs sm:text-sm font-light text-[#f7f1e6]/80 pt-4 border-t border-[#c7a252]/10">
                 <div className="flex gap-3 items-start">
                   <Phone className="w-5 h-5 text-[#c7a252] flex-shrink-0 mt-0.5" />
                   <div>
@@ -93,36 +109,36 @@ export const LocationSection: React.FC = () => {
                   href="https://www.instagram.com/house_of_bae1/"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 border border-[#c7a252]/40 hover:border-[#c7a252] text-[#e8cd8a] px-4 py-2 text-xs uppercase tracking-wider rounded transition-colors"
+                  className="inline-flex items-center gap-2 text-[#e8cd8a] hover:text-[#c7a252] text-xs uppercase tracking-wider transition-colors"
                 >
                   <Instagram className="w-4 h-4" />
-                  <span>Follow @house_of_bae1</span>
+                  <span className="underline underline-offset-4">Follow @house_of_bae1</span>
                 </a>
               </div>
             </div>
 
             {/* Quick Inquiry Form */}
-            <div className="pt-6 border-t border-[#c7a252]/20">
-              <div className="text-xs font-serif-display italic text-[#e8cd8a] mb-3">
+            <div className="flex flex-col justify-center bg-[#0e0b0a] p-6 sm:p-8 rounded border border-[#c7a252]/20 shadow-lg">
+              <div className="text-xs font-serif-display italic text-[#e8cd8a] mb-4 text-center">
                 Send a Quick Studio Message
               </div>
 
               {sentSuccess ? (
-                <div className="p-3.5 bg-[#c7a252]/20 border border-[#c7a252] rounded text-xs text-[#e8cd8a] flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4" />
+                <div className="p-4 bg-[#c7a252]/10 border border-[#c7a252]/30 rounded text-xs text-[#e8cd8a] flex flex-col items-center text-center gap-2">
+                  <CheckCircle2 className="w-6 h-6 mb-1" />
                   <span>Message received! We will reach out to your phone shortly.</span>
                 </div>
               ) : (
-                <form onSubmit={handleInquirySubmit} className="space-y-3">
-                  {errorMsg && <div className="text-xs text-red-400">{errorMsg}</div>}
-                  <div className="grid grid-cols-2 gap-2">
+                <form onSubmit={handleInquirySubmit} className="space-y-4">
+                  {errorMsg && <div className="text-xs text-red-400 text-center">{errorMsg}</div>}
+                  <div className="space-y-3">
                     <input
                       type="text"
                       placeholder="Your Name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
-                      className="w-full bg-[#0e0b0a] border border-[#c7a252]/20 text-[#f7f1e6] px-3 py-2 text-xs rounded focus:outline-none focus:border-[#c7a252]"
+                      className="w-full bg-[#171211] border border-[#c7a252]/30 text-[#f7f1e6] px-3.5 py-2.5 text-xs rounded focus:outline-none focus:border-[#c7a252]"
                     />
                     <input
                       type="tel"
@@ -130,21 +146,21 @@ export const LocationSection: React.FC = () => {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       required
-                      className="w-full bg-[#0e0b0a] border border-[#c7a252]/20 text-[#f7f1e6] px-3 py-2 text-xs rounded focus:outline-none focus:border-[#c7a252]"
+                      className="w-full bg-[#171211] border border-[#c7a252]/30 text-[#f7f1e6] px-3.5 py-2.5 text-xs rounded focus:outline-none focus:border-[#c7a252]"
+                    />
+                    <textarea
+                      rows={3}
+                      placeholder="Ask about nail art pricing, bridal packages..."
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      required
+                      className="w-full bg-[#171211] border border-[#c7a252]/30 text-[#f7f1e6] px-3.5 py-2.5 text-xs rounded focus:outline-none focus:border-[#c7a252]"
                     />
                   </div>
-                  <textarea
-                    rows={2}
-                    placeholder="Ask about nail art pricing, bridal packages..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    required
-                    className="w-full bg-[#0e0b0a] border border-[#c7a252]/20 text-[#f7f1e6] px-3 py-2 text-xs rounded focus:outline-none focus:border-[#c7a252]"
-                  />
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full bg-[#c7a252]/10 hover:bg-[#c7a252] text-[#e8cd8a] hover:text-[#0e0b0a] border border-[#c7a252] py-2 text-xs font-medium uppercase tracking-wider rounded transition-colors flex items-center justify-center gap-1.5"
+                    className="w-full bg-transparent hover:bg-[#c7a252] text-[#e8cd8a] hover:text-[#0e0b0a] border border-[#c7a252] py-2.5 text-xs font-medium uppercase tracking-wider rounded transition-colors flex items-center justify-center gap-2"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Send Inquiry</span>
@@ -152,19 +168,7 @@ export const LocationSection: React.FC = () => {
                 </form>
               )}
             </div>
-          </div>
 
-          {/* Map Link Button */}
-          <div className="min-h-[200px] border-t lg:border-t-0 lg:border-l border-[#c7a252]/30 relative flex items-center justify-center p-8 bg-[#0e0b0a]/50">
-            <a
-              href="https://www.google.com/maps?q=Lideta,Addis+Ababa,Ethiopia"
-              target="_blank"
-              rel="noreferrer"
-              className="px-8 py-4 bg-[#c7a252] text-[#0e0b0a] font-medium text-xs sm:text-sm tracking-widest uppercase flex items-center gap-3 rounded hover:-translate-y-1 transition-all duration-300 shadow-[0_8px_20px_rgba(199,162,82,0.2)] hover:shadow-[0_12px_25px_rgba(199,162,82,0.35)]"
-            >
-              <MapPin className="w-5 h-5" />
-              Open in Google Maps
-            </a>
           </div>
         </div>
       </div>

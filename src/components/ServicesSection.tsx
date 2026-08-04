@@ -32,7 +32,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       <div className="max-w-5xl mx-auto px-6">
         {/* Section Header */}
         <div className="text-center max-w-xl mx-auto mb-12">
-          <div className="eyebrow">The Atelier Menu</div>
+          <div className="eyebrow">The Studio Menu</div>
           <h2 className="font-serif-display text-4xl sm:text-5xl italic mt-3 text-[#f7f1e6]">
             Services & Pricing
           </h2>
@@ -109,25 +109,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           ))}
         </div>
 
-        {/* Custom Art Notice */}
-        <div className="mt-10 p-6 rounded border border-[#c7a252]/20 bg-[#171211]/80 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Sparkles className="w-5 h-5 text-[#c7a252] flex-shrink-0" />
-            <div>
-              <div className="text-sm font-medium text-[#e8cd8a]">Have a custom Pinterest or Instagram reference?</div>
-              <div className="text-xs text-[#f7f1e6]/60">Bring your photo reference to your appointment or discuss it with your nail artist during consultation.</div>
-            </div>
-          </div>
-          <button
-            onClick={() => {
-              const el = document.getElementById("booking");
-              if (el) el.scrollIntoView({ behavior: "smooth" });
-            }}
-            className="text-xs text-[#c7a252] hover:text-[#e8cd8a] underline underline-offset-4 font-medium whitespace-nowrap"
-          >
-            Book Appointment →
-          </button>
-        </div>
+
       </div>
     </section>
   );
