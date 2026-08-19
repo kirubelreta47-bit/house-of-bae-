@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Search, Menu, X } from "lucide-react";
 
 interface HeaderProps {
@@ -14,6 +14,33 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Triple-click / triple-tap counter for secret mobile & desktop admin access
+  const clickCountRef = useRef(0);
+  const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleLogoTripleClick = (e: React.MouseEvent) => {
+    clickCountRef.current += 1;
+
+    if (clickCountRef.current >= 3) {
+      e.preventDefault();
+      e.stopPropagation();
+      clickCountRef.current = 0;
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+      
+      if (onOpenAdminModal) {
+        onOpenAdminModal();
+      } else {
+        window.location.href = "/admin";
+      }
+      return;
+    }
+
+    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+    clickTimerRef.current = setTimeout(() => {
+      clickCountRef.current = 0;
+    }, 600);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,11 +69,13 @@ export const Header: React.FC<HeaderProps> = ({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         
-        {/* Left: Refined Wordmark with Logo from Public Folder */}
+        {/* Left: Refined Wordmark with Logo (Triple-click / tap opens /admin) */}
         <div className="flex items-center">
           <a
             href="#"
-            className="group flex items-center gap-2.5 sm:gap-3 transition-opacity hover:opacity-90"
+            onClick={handleLogoTripleClick}
+            className="group flex items-center gap-2.5 sm:gap-3 transition-opacity hover:opacity-90 select-none cursor-pointer"
+            title="Triple-click/tap for Admin Portal"
           >
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-[#C7A45A]/40 p-0.5 flex-shrink-0 bg-[#0A0A09] shadow-[0_0_12px_rgba(199,164,90,0.15)] group-hover:border-[#C7A45A] transition-colors">
               <img
@@ -66,7 +95,7 @@ export const Header: React.FC<HeaderProps> = ({
           </a>
         </div>
 
-        {/* Center: Editorial Navigation Links with subtle gold hover underlines */}
+        {/* Center: Editorial Navigation Links */}
         <nav className="hidden md:flex items-center gap-9 text-[12px] tracking-[0.18em] uppercase text-[#A9A399] font-normal">
           <button
             onClick={() => scrollTo("services")}
@@ -127,7 +156,10 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Minimalist Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-x-0 top-[70px] bg-[#0A0A09] border-b border-[#F3EBDD]/10 px-8 py-8 flex flex-col gap-6 animate-fade-in shadow-2xl">
-          <div className="flex items-center gap-3 pb-3 border-b border-[#F3EBDD]/10">
+          <div
+            onClick={handleLogoTripleClick}
+            className="flex items-center gap-3 pb-3 border-b border-[#F3EBDD]/10 cursor-pointer select-none"
+          >
             <div className="w-9 h-9 rounded-full overflow-hidden border border-[#C7A45A]/40 p-0.5 bg-[#0A0A09]">
               <img
                 src="/house_of_bae_logo.png"
@@ -140,7 +172,7 @@ export const Header: React.FC<HeaderProps> = ({
                 House of <span className="text-[#C7A45A]">Bae</span>
               </span>
               <span className="text-[8px] tracking-[0.3em] text-[#C7A45A]/80 uppercase">
-                Atelier · Lideta
+                Atelier · Lideta (Triple-tap for Admin)
               </span>
             </div>
           </div>
@@ -168,40 +200,29 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => scrollTo("location")}
               className="text-left py-2 hover:text-[#F3EBDD] border-b border-[#F3EBDD]/5"
             >
-              Location & Hours
-            </button>
-          </div>
-
-          <div className="pt-2 flex flex-col gap-3">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenBookingModal();
-              }}
-              className="w-full bg-[#F3EBDD] text-[#0A0A09] py-3.5 text-xs tracking-[0.2em] uppercase font-medium"
-            >
-              Book An Appointment
+              Location
             </button>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenLookupModal();
               }}
-              className="w-full py-3 text-xs tracking-[0.18em] uppercase text-[#A9A399] border border-[#F3EBDD]/15 hover:text-[#F3EBDD]"
+              className="text-left py-2 hover:text-[#C7A45A] border-b border-[#F3EBDD]/5 flex items-center gap-2"
             >
-              Check My Appointment
+              <Search className="w-3.5 h-3.5 text-[#C7A45A]" />
+              <span>Lookup My Appointment</span>
             </button>
-          </div>
 
-          <div className="pt-4 text-center">
+            {/* Direct Admin Access Link in Mobile Menu for Owner */}
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
-                onOpenAdminModal();
+                if (onOpenAdminModal) onOpenAdminModal();
+                else window.location.href = "/admin";
               }}
-              className="text-[10px] tracking-[0.2em] uppercase text-[#A9A399]/40 hover:text-[#A9A399]"
+              className="text-left py-2 text-[#C7A45A] font-semibold border-b border-[#C7A45A]/20 flex items-center gap-2"
             >
-              Staff Portal
+              <span>Studio Owner Portal (/admin)</span>
             </button>
           </div>
         </div>

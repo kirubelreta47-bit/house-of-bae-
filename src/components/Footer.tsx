@@ -36,6 +36,23 @@ const PhoneIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
 );
 
 export const Footer: React.FC = () => {
+  const clickCountRef = React.useRef(0);
+  const clickTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const handleFooterLogoTripleClick = () => {
+    clickCountRef.current += 1;
+    if (clickCountRef.current >= 3) {
+      clickCountRef.current = 0;
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+      window.location.href = "/admin";
+      return;
+    }
+    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+    clickTimerRef.current = setTimeout(() => {
+      clickCountRef.current = 0;
+    }, 600);
+  };
+
   return (
     <footer id="location" className="py-14 sm:py-20 bg-[#0A0A09] border-t border-[#F3EBDD]/10 text-center relative overflow-hidden">
       <div id="contact" className="absolute -top-16" />
@@ -43,7 +60,11 @@ export const Footer: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6 sm:space-y-8">
         
         {/* Brand Emblem & Wordmark */}
-        <div className="flex flex-col items-center gap-3">
+        <div
+          onClick={handleFooterLogoTripleClick}
+          className="flex flex-col items-center gap-3 cursor-pointer select-none"
+          title="Triple-click for Admin Portal"
+        >
           <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border border-[#C7A45A]/40 p-0.5 bg-[#0A0A09]">
             <img
               src="/house_of_bae_logo.png"
