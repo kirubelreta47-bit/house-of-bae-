@@ -1,28 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
-import { ShapeDivider } from "./components/ShapeDivider";
-import { AmbientBackground } from "./components/AmbientBackground";
+import { PhilosophySection } from "./components/PhilosophySection";
 import { ServicesSection } from "./components/ServicesSection";
 import { GallerySection } from "./components/GallerySection";
-import { BookingSection } from "./components/BookingSection";
-import { LocationSection } from "./components/LocationSection";
 import { Footer } from "./components/Footer";
+import { BookingModal } from "./components/BookingModal";
 import { BookingLookupModal } from "./components/BookingLookupModal";
 import { AdminDashboardModal } from "./components/AdminDashboardModal";
-import { Service, GalleryItem, Booking } from "./types";
-import { MessageSquare } from "lucide-react";
+import { AdminDashboardPage } from "./components/AdminDashboardPage";
+import { Service, GalleryItem } from "./types";
 
 export default function App() {
   const [services, setServices] = useState<Service[]>([]);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [preselectedService, setPreselectedService] = useState<Service | null>(null);
 
-  // Modals
+  // Path routing state
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  // Modals state
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isLookupOpen, setIsLookupOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
 
-  // Fetch initial data
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPath(window.location.pathname);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  const navigateTo = (path: string) => {
+    window.history.pushState({}, "", path);
+    setCurrentPath(path);
+  };
+
+  // Fetch initial studio data
   const loadData = async () => {
     try {
       const [resS, resG] = await Promise.all([
@@ -44,93 +59,83 @@ export default function App() {
     loadData();
   }, []);
 
-  const handleSelectServiceToBook = (service: Service) => {
+  const handleOpenBookingWithService = (service: Service) => {
     setPreselectedService(service);
-    const bookingEl = document.getElementById("booking");
-    if (bookingEl) {
-      bookingEl.scrollIntoView({ behavior: "smooth" });
-    }
+    setIsBookingOpen(true);
   };
 
-  const handleOpenBooking = () => {
-    const bookingEl = document.getElementById("booking");
-    if (bookingEl) {
-      bookingEl.scrollIntoView({ behavior: "smooth" });
-    }
+  const handleOpenBookingModal = () => {
+    setIsBookingOpen(true);
   };
+
+  const handleExploreServices = () => {
+    const el = document.getElementById("services");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Render standalone Admin Page if path is /admin
+  if (currentPath === "/admin") {
+    return <AdminDashboardPage onNavigateHome={() => navigateTo("/")} />;
+  }
 
   return (
-    <div className="min-h-screen bg-[#0e0b0a] text-[#f7f1e6] relative font-sans">
-      {/* Custom Animated Layer */}
-      <AmbientBackground />
-
-      {/* Navigation Header */}
+    <div className="min-h-screen bg-[#0A0A09] text-[#F3EBDD] relative font-sans selection:bg-[#C7A45A] selection:text-[#0A0A09]">
+      
+      {/* 1. Minimal Quiet Luxury Navigation */}
       <Header
-        onOpenBookingModal={handleOpenBooking}
+        onOpenBookingModal={handleOpenBookingModal}
         onOpenLookupModal={() => setIsLookupOpen(true)}
-        onOpenAdminModal={() => setIsAdminOpen(true)}
+        onOpenAdminModal={() => navigateTo("/admin")}
       />
 
       {/* Main Content Sections */}
-      <main className="relative z-10">
+      <main>
+        {/* 1. Large Cinematic Editorial Hero */}
         <Hero
-          onOpenBookingModal={handleOpenBooking}
-          onExploreServices={() => {
-            const el = document.getElementById("services");
-            if (el) el.scrollIntoView({ behavior: "smooth" });
-          }}
+          onOpenBookingModal={handleOpenBookingModal}
+          onExploreServices={handleExploreServices}
         />
 
-        <ShapeDivider type="drop" />
+        {/* 2. Quiet Editorial Philosophy Section */}
+        <PhilosophySection />
 
-
+        {/* 3. Minimal Editorial Services Directory */}
         <ServicesSection
           services={services}
-          onSelectServiceToBook={handleSelectServiceToBook}
+          onSelectServiceToBook={handleOpenBookingWithService}
         />
 
-        <ShapeDivider type="rectangle" />
-
+        {/* 4. Curated Fashion Lookbook Gallery */}
         <GallerySection galleryItems={galleryItems} />
-
-        <ShapeDivider type="triangle" />
-
-        <BookingSection
-          services={services}
-          preselectedService={preselectedService}
-        />
-
-        <LocationSection />
       </main>
 
+      {/* 5. Minimalist Contact Us, Visit Us & Connected App Logos Footer */}
       <Footer />
 
-      {/* Floating WhatsApp Quick Action */}
-      <a
-        href="https://wa.me/251926795498?text=Hello%20House%20of%20Bae%20✦%20I%20have%20a%20question%20about%20your%20nail%20services"
-        target="_blank"
-        rel="noreferrer"
-        className="fixed bottom-6 right-6 z-40 bg-[#25D366] text-[#0e0b0a] p-3.5 rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.4)] hover:scale-110 transition-transform flex items-center justify-center border border-white/20 group"
-        title="Chat on WhatsApp"
-        aria-label="Chat on WhatsApp"
-      >
-        <MessageSquare className="w-6 h-6 fill-[#0e0b0a]" />
-        <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out text-xs font-medium uppercase tracking-wider pl-0 group-hover:pl-2">
-          Chat WhatsApp
-        </span>
-      </a>
+      {/* Booking Experience Modal */}
+      <BookingModal
+        isOpen={isBookingOpen}
+        onClose={() => {
+          setIsBookingOpen(false);
+          setPreselectedService(null);
+        }}
+        services={services}
+        preselectedService={preselectedService}
+      />
 
-      {/* Modals */}
+      {/* Appointment Verification / Lookup Modal */}
       <BookingLookupModal
         isOpen={isLookupOpen}
         onClose={() => setIsLookupOpen(false)}
       />
 
+      {/* Studio Staff Operations Portal Modal */}
       <AdminDashboardModal
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
         onRefreshServices={loadData}
       />
+
     </div>
   );
 }

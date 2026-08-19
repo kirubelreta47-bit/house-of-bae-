@@ -16,15 +16,66 @@ const PORT = 3000;
 
 app.use(express.json({ limit: "10mb" }));
 
-// Initialize Gemini Client
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY || "",
-  httpOptions: {
-    headers: {
-      "User-Agent": "aistudio-build",
-    },
-  },
-});
+// Initialize Gemini Client conditionally if API key is present
+const geminiApiKey = process.env.GEMINI_API_KEY;
+const ai = geminiApiKey && geminiApiKey !== "MY_GEMINI_API_KEY"
+  ? new GoogleGenAI({
+      apiKey: geminiApiKey,
+      httpOptions: {
+        headers: {
+          "User-Agent": "aistudio-build",
+        },
+      },
+    })
+  : null;
+
+// Telegram Bot Credentials
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8019288831:AAGdkb8yYlPC9dikU1sRUTWtU1DqWWvKNwE";
+const TELEGRAM_ADMIN_CHAT_ID = process.env.TELEGRAM_ADMIN_CHAT_ID || "6933707628";
+
+async function sendTelegramNotification(b: Booking) {
+  try {
+    const targetChatId = process.env.TELEGRAM_ADMIN_CHAT_ID || "6933707628";
+    const targetToken = process.env.TELEGRAM_BOT_TOKEN || "8019288831:AAGdkb8yYlPC9dikU1sRUTWtU1DqWWvKNwE";
+
+    const text =
+      `<b>✨ NEW APPOINTMENT RESERVATION ✨</b>\n\n` +
+      `<b>Ref Code:</b> <code>${b.referenceCode}</code>\n` +
+      `<b>Customer Name:</b> ${b.customerName}\n` +
+      `<b>Phone Number:</b> <code>${b.phone}</code>\n` +
+      `<b>Service:</b> ${b.serviceName}\n` +
+      `<b>Total Price:</b> ${b.price.toLocaleString()} ETB\n` +
+      `<b>Date:</b> ${b.date}\n` +
+      `<b>Time Slot:</b> ${b.timeSlot}\n` +
+      `<b>Nail Shape:</b> ${b.nailShape || "Almond"}\n` +
+      (b.notes ? `<b>Notes:</b> ${b.notes}\n` : "") +
+      `<b>Status:</b> ⏳ ${b.status}`;
+
+    const url = `https://api.telegram.org/bot${targetToken}/sendMessage`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: targetChatId,
+        text,
+        parse_mode: "HTML",
+      }),
+    });
+
+    const data = await response.json();
+    if (!data.ok) {
+      console.error("Telegram API error:", data);
+      if (data.error_code === 403 || data.description?.includes("bot can't send messages to the bot")) {
+        console.warn("⚠️ TELEGRAM NOTE: Chat ID is set to the Bot ID itself. Telegram bots cannot send messages to their own ID.");
+        console.warn("👉 Please get your personal user Chat ID from Telegram (@userinfobot) and set TELEGRAM_ADMIN_CHAT_ID in .env!");
+      }
+    } else {
+      console.log("Telegram notification sent successfully to chat:", TELEGRAM_ADMIN_CHAT_ID);
+    }
+  } catch (err) {
+    console.error("Failed to send Telegram notification:", err);
+  }
+}
 
 // Database Setup
 const DATA_DIR = path.join(__dirname, "data");
@@ -77,11 +128,21 @@ interface InquiryMessage {
   createdAt: string;
 }
 
+interface ExpenseItem {
+  id: string;
+  name: string;
+  category: "Supplies" | "Equipment" | "Tools" | "Marketing" | "Rent/Utilities" | "Other";
+  price: number;
+  isPurchased: boolean;
+  createdAt: string;
+}
+
 interface DBStructure {
   services: Service[];
   bookings: Booking[];
   gallery: GalleryItem[];
   messages: InquiryMessage[];
+  expenses: ExpenseItem[];
 }
 
 const initialServices: Service[] = [
@@ -252,6 +313,41 @@ const initialBookings: Booking[] = [
   },
 ];
 
+const initialExpenses: ExpenseItem[] = [
+  {
+    id: "exp_1",
+    name: "Gel-X Soft Tips & Builder Gel Restock",
+    category: "Supplies",
+    price: 1850,
+    isPurchased: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "exp_2",
+    name: "24k Gold Foil & Chrome Powder Set",
+    category: "Supplies",
+    price: 450,
+    isPurchased: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "exp_3",
+    name: "UV/LED Gel Curing Lamp (Chair 2)",
+    category: "Equipment",
+    price: 2200,
+    isPurchased: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "exp_4",
+    name: "Precision E-File Carbide Bits Set",
+    category: "Tools",
+    price: 750,
+    isPurchased: false,
+    createdAt: new Date().toISOString(),
+  },
+];
+
 function initDB(): DBStructure {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -262,13 +358,18 @@ function initDB(): DBStructure {
       bookings: initialBookings,
       gallery: initialGallery,
       messages: [],
+      expenses: initialExpenses,
     };
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
     return data;
   }
   try {
     const content = fs.readFileSync(DB_FILE, "utf-8");
-    return JSON.parse(content);
+    const parsed = JSON.parse(content);
+    if (!parsed.expenses) {
+      parsed.expenses = initialExpenses;
+    }
+    return parsed;
   } catch (err) {
     console.error("Error reading database file, re-initializing:", err);
     const data: DBStructure = {
@@ -276,6 +377,7 @@ function initDB(): DBStructure {
       bookings: initialBookings,
       gallery: initialGallery,
       messages: [],
+      expenses: initialExpenses,
     };
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
     return data;
@@ -343,6 +445,8 @@ app.get("/api/slots", (req, res) => {
     "4:00 PM",
     "5:00 PM",
     "6:00 PM",
+    "7:00 PM",
+    "8:00 PM",
   ];
 
   const bookedTimeSlots = db.bookings
@@ -390,11 +494,22 @@ app.post("/api/bookings", (req, res) => {
     notes,
   } = req.body;
 
-  if (!customerName || !phone || !serviceName || !date || !timeSlot) {
-    return res.status(400).json({ success: false, error: "Name, phone, service, date, and time slot are required." });
+  const db = initDB();
+
+  let targetServiceName = serviceName;
+  let targetPrice = Number(price) || 0;
+
+  if (!targetServiceName && serviceId) {
+    const foundService = db.services.find((s) => s.id === serviceId);
+    if (foundService) {
+      targetServiceName = foundService.name;
+      targetPrice = foundService.price;
+    }
   }
 
-  const db = initDB();
+  if (!customerName || !phone || !targetServiceName || !date || !timeSlot) {
+    return res.status(400).json({ success: false, error: "Name, phone, service, date, and time slot are required." });
+  }
 
   // Check if slot already booked for this date
   const isBooked = db.bookings.some(
@@ -416,8 +531,8 @@ app.post("/api/bookings", (req, res) => {
     phone,
     email: email || "",
     serviceId: serviceId || "",
-    serviceName,
-    price: Number(price) || 0,
+    serviceName: targetServiceName,
+    price: targetPrice,
     date,
     timeSlot,
     nailShape: nailShape || "Almond",
@@ -430,6 +545,9 @@ app.post("/api/bookings", (req, res) => {
 
   db.bookings.push(newBooking);
   saveDB(db);
+
+  // Send instant Telegram notification to studio admin
+  sendTelegramNotification(newBooking).catch((e) => console.error("Telegram notification error:", e));
 
   res.json({ success: true, booking: newBooking });
 });
@@ -527,6 +645,64 @@ app.get("/api/messages", (req, res) => {
   res.json({ success: true, messages: db.messages });
 });
 
+// GET /api/expenses
+app.get("/api/expenses", (req, res) => {
+  const db = initDB();
+  res.json({ success: true, expenses: db.expenses || [] });
+});
+
+// POST /api/expenses (Add item to buy / expense)
+app.post("/api/expenses", (req, res) => {
+  const { name, category, price, isPurchased } = req.body;
+  if (!name || price === undefined) {
+    return res.status(400).json({ success: false, error: "Name and price are required." });
+  }
+  const db = initDB();
+  if (!db.expenses) db.expenses = [];
+
+  const newExpense: ExpenseItem = {
+    id: "exp_" + Date.now(),
+    name,
+    category: category || "Supplies",
+    price: Number(price) || 0,
+    isPurchased: Boolean(isPurchased),
+    createdAt: new Date().toISOString(),
+  };
+  db.expenses.push(newExpense);
+  saveDB(db);
+  res.json({ success: true, expense: newExpense });
+});
+
+// PATCH /api/expenses/:id (Toggle purchased or update)
+app.patch("/api/expenses/:id", (req, res) => {
+  const { id } = req.params;
+  const { isPurchased, name, price } = req.body;
+  const db = initDB();
+  if (!db.expenses) db.expenses = [];
+
+  const idx = db.expenses.findIndex((e) => e.id === id);
+  if (idx === -1) {
+    return res.status(404).json({ success: false, error: "Expense item not found" });
+  }
+
+  if (isPurchased !== undefined) db.expenses[idx].isPurchased = Boolean(isPurchased);
+  if (name) db.expenses[idx].name = name;
+  if (price !== undefined) db.expenses[idx].price = Number(price);
+
+  saveDB(db);
+  res.json({ success: true, expense: db.expenses[idx] });
+});
+
+// DELETE /api/expenses/:id
+app.delete("/api/expenses/:id", (req, res) => {
+  const { id } = req.params;
+  const db = initDB();
+  if (!db.expenses) db.expenses = [];
+  db.expenses = db.expenses.filter((e) => e.id !== id);
+  saveDB(db);
+  res.json({ success: true });
+});
+
 // GET /api/stats (Admin analytics)
 app.get("/api/stats", (req, res) => {
   const db = initDB();
@@ -537,20 +713,76 @@ app.get("/api/stats", (req, res) => {
   const totalRevenueETB = confirmedOrCompleted.reduce((acc, b) => acc + (b.price || 0), 0);
   const pendingCount = db.bookings.filter((b) => b.status === "Pending").length;
 
+  const now = new Date();
+  const todayStr = now.toISOString().split("T")[0];
+
+  // Calculate Monday of current week
+  const dayOfWeek = now.getDay();
+  const distanceToMonday = (dayOfWeek + 6) % 7;
+  const mondayDate = new Date(now);
+  mondayDate.setDate(now.getDate() - distanceToMonday);
+
+  const daysOfWeekNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const weeklyBreakdown = daysOfWeekNames.map((dayName, idx) => {
+    const d = new Date(mondayDate);
+    d.setDate(mondayDate.getDate() + idx);
+    const dateStr = d.toISOString().split("T")[0];
+
+    const dayBookings = confirmedOrCompleted.filter((b) => b.date === dateStr);
+    const dayRevenue = dayBookings.reduce((acc, b) => acc + (b.price || 0), 0);
+
+    return {
+      day: dayName,
+      fullDate: dateStr,
+      revenue: dayRevenue,
+      bookingCount: dayBookings.length,
+    };
+  });
+
+  const thisWeekRevenueETB = weeklyBreakdown.reduce((acc, d) => acc + d.revenue, 0);
+
+  const currentYearMonth = todayStr.substring(0, 7);
+  const thisMonthRevenueETB = confirmedOrCompleted
+    .filter((b) => b.date && b.date.startsWith(currentYearMonth))
+    .reduce((acc, b) => acc + (b.price || 0), 0);
+
+  const todayRevenueETB = confirmedOrCompleted
+    .filter((b) => b.date === todayStr)
+    .reduce((acc, b) => acc + (b.price || 0), 0);
+
+  const expensesList = db.expenses || [];
+  const totalExpensesETB = expensesList.filter((e) => e.isPurchased).reduce((acc, e) => acc + (e.price || 0), 0);
+  const plannedExpensesETB = expensesList.filter((e) => !e.isPurchased).reduce((acc, e) => acc + (e.price || 0), 0);
+  const netProfitETB = totalRevenueETB - totalExpensesETB;
+
   res.json({
     success: true,
     stats: {
       totalBookings,
       totalRevenueETB,
+      thisMonthRevenueETB,
+      thisWeekRevenueETB,
+      todayRevenueETB,
+      totalExpensesETB,
+      plannedExpensesETB,
+      netProfitETB,
       pendingCount,
       confirmedCount: confirmedOrCompleted.length,
       totalServicesCount: db.services.length,
+      weeklyBreakdown,
     },
   });
 });
 
+import { initNeonTables } from "./backend/db/initNeon";
+
 // Vite & Static Server Setup
 async function startServer() {
+  // Initialize Neon PostgreSQL tables if DATABASE_URL is configured
+  if (process.env.DATABASE_URL) {
+    await initNeonTables();
+  }
+
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },

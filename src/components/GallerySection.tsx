@@ -1,208 +1,186 @@
 import React, { useState } from "react";
 import { GalleryItem } from "../types";
-import { Eye, X, ExternalLink, Sparkles } from "lucide-react";
+import { X, ArrowRight } from "lucide-react";
 
 interface GallerySectionProps {
   galleryItems: GalleryItem[];
 }
 
-export const GallerySection: React.FC<GallerySectionProps> = ({ galleryItems }) => {
-  const [selectedFilter, setSelectedFilter] = useState("all");
-  const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
+const editorialLookbook = [
+  {
+    id: "look-1",
+    title: "Glazed Silk Manicure",
+    category: "Minimalist Nude",
+    image: "/images/nude_glaze_nails_1785790556348.jpg",
+    description: "Sheer iridescent pearl glaze over tailored almond shape.",
+    span: "col-span-12 md:col-span-7",
+    aspect: "aspect-[16/11]",
+  },
+  {
+    id: "look-2",
+    title: "Liquid Onyx Chrome",
+    category: "Mirror Finish",
+    image: "/images/onyx_chrome_nails_1785790542145.jpg",
+    description: "Deep noir base coated with ultra-reflective silver chrome.",
+    span: "col-span-12 md:col-span-5",
+    aspect: "aspect-[4/5]",
+  },
+  {
+    id: "look-3",
+    title: "24k Gold Leaf French",
+    category: "Artisanal Metallic",
+    image: "/images/gold_foil_french_1785790568862.jpg",
+    description: "Hand-laid gold flakes along a sculpted micro-French tip.",
+    span: "col-span-12 md:col-span-5",
+    aspect: "aspect-[4/5]",
+  },
+  {
+    id: "look-4",
+    title: "Obsidian Marble Vein",
+    category: "Hand-Painted",
+    image: "/images/black_gold_marble_1785790591177.jpg",
+    description: "Multi-layered smoky marble with subtle metallic gold mica.",
+    span: "col-span-12 md:col-span-7",
+    aspect: "aspect-[16/11]",
+  },
+  {
+    id: "look-5",
+    title: "Milk Bath Neutral Almond",
+    category: "European Care",
+    image: "/images/milk_bar_nude_nails_1785790602182.jpg",
+    description: "Clean Russian e-file cuticle care with semi-translucent nude rubber base.",
+    span: "col-span-12 md:col-span-6",
+    aspect: "aspect-[4/3]",
+  },
+  {
+    id: "look-6",
+    title: "Champagne Shimmer Silk",
+    category: "High Luster",
+    image: "/images/champagne_silk_nails_1785790580027.jpg",
+    description: "Subtle reflective cat-eye velvet shimmer over sheer blush.",
+    span: "col-span-12 md:col-span-6",
+    aspect: "aspect-[4/3]",
+  },
+];
 
-  const filterCategories = ["all", "Chrome & Metallic", "Nudes & Sheer", "Nail Art"];
-
-  const filteredItems =
-    selectedFilter === "all"
-      ? galleryItems
-      : galleryItems.filter((i) => i.category === selectedFilter);
+export const GallerySection: React.FC<GallerySectionProps> = () => {
+  const [selectedPhoto, setSelectedPhoto] = useState<typeof editorialLookbook[0] | null>(null);
 
   return (
-    <section id="gallery" className="py-24 relative overflow-hidden">
-      {/* Background ambient light */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#c7a252]/5 rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-          <div className="max-w-xl">
-            <div className="flex items-center gap-3 eyebrow mb-4">
-              <Sparkles className="w-4 h-4 text-[#c7a252]" />
-              Shade & Finish Card
+    <section id="gallery" className="py-12 sm:py-16 lg:py-20 bg-[#0A0A09] border-t border-[#F3EBDD]/10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Section Header - Compact */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-10 gap-3 text-left">
+          <div className="space-y-1 max-w-xl">
+            <div className="inline-flex items-center gap-2">
+              <span className="w-3.5 h-[1px] bg-[#C7A45A]" />
+              <span className="editorial-label text-[9px] sm:text-[10px] tracking-[0.25em] sm:tracking-[0.3em] text-[#C7A45A]">
+                Curated Lookbook
+              </span>
             </div>
-            <h2 className="font-serif-display text-4xl sm:text-5xl italic text-[#f7f1e6]">
-              Studio Gallery
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-[#F3EBDD] leading-tight">
+              Every set tells a <span className="text-[#C7A45A] italic">story.</span>
             </h2>
-            <p className="mt-4 text-[#f7f1e6]/65 text-sm sm:text-base font-light leading-relaxed">
-              A curated lookbook of our signature palettes, hyper-gloss finishes, and intricate foil artistry created exclusively at House of Bae.
+            <p className="text-xs text-[#A9A399] font-light">
+              Recent bespoke commissions crafted at our Lideta studio.
             </p>
           </div>
-          
-          {/* Filters */}
-          <div className="flex flex-wrap gap-2 md:justify-end">
-            {filterCategories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedFilter(cat)}
-                className={`px-5 py-2 text-[10px] uppercase tracking-widest rounded-full transition-all duration-300 border backdrop-blur-sm ${
-                  selectedFilter === cat
-                    ? "border-[#c7a252] text-[#0e0b0a] bg-[#c7a252] shadow-[0_0_20px_rgba(199,162,82,0.3)] font-medium"
-                    : "border-[#c7a252]/20 text-[#f7f1e6]/60 hover:text-[#e8cd8a] hover:border-[#c7a252]/50 bg-[#171211]/50"
-                }`}
-              >
-                {cat === "all" ? "All Lookbook" : cat}
-              </button>
-            ))}
+
+          <div>
+            <a
+              href="https://www.instagram.com/house_of_bae1/"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.2em] uppercase text-[#C7A45A] hover:text-[#D9B86C] transition-colors border-b border-[#C7A45A]/40 hover:border-[#D9B86C] pb-0.5 font-light"
+            >
+              <span>View Instagram Portfolio</span>
+              <ArrowRight className="w-3 h-3" />
+            </a>
           </div>
         </div>
 
-        {/* Dynamic Grid / Masonry-like Layout */}
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
-          {filteredItems.map((item, index) => {
-            // Give varied heights for masonry effect
-            const heights = ["h-[400px]", "h-[500px]", "h-[350px]", "h-[450px]", "h-[550px]", "h-[380px]"];
-            const heightClass = heights[index % heights.length];
-
-            return (
-              <div
-                key={item.id}
-                onClick={() => setActiveItem(item)}
-                className={`group relative rounded w-full overflow-hidden border border-[#c7a252]/20 bg-[#171211] flex flex-col justify-end cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:border-[#c7a252]/80 hover:shadow-[0_20px_40px_rgba(199,162,82,0.15)] break-inside-avoid ${heightClass}`}
-                style={{
-                  background: item.imageUrl ? `url(${item.imageUrl}) center/cover no-repeat` : item.gradient,
-                }}
-              >
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0e0b0a] via-[#0e0b0a]/40 to-transparent opacity-90 group-hover:opacity-70 transition-opacity duration-500" />
-                
-                {/* Number Badge */}
-                <div className="absolute top-5 left-5 z-10 opacity-0 -translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100">
-                  <span className="eyebrow text-[9px] text-[#0e0b0a] bg-[#c7a252] px-3 py-1.5 rounded uppercase tracking-widest shadow-lg">
-                    Look 0{index + 1}
-                  </span>
-                </div>
-
-                <div className="absolute top-5 right-5 z-10 w-10 h-10 rounded-full bg-[#0e0b0a]/80 backdrop-blur-md flex items-center justify-center text-[#c7a252] border border-[#c7a252]/30 opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 transform origin-center">
-                  <Eye className="w-4 h-4" />
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10 p-6 sm:p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="h-[1px] w-8 bg-[#c7a252]/50 group-hover:w-12 transition-all duration-500" />
-                    <span className="text-[10px] uppercase tracking-widest text-[#e8cd8a] font-mono">
-                      {item.category}
-                    </span>
-                  </div>
-                  <h4 className="font-serif-display text-3xl italic text-[#f7f1e6] group-hover:text-white transition-colors duration-300">
-                    {item.title}
-                  </h4>
-                  <p className="text-xs text-[#f7f1e6]/60 font-light mt-3 leading-relaxed opacity-0 max-h-0 group-hover:opacity-100 group-hover:max-h-20 transition-all duration-500 delay-75 line-clamp-2">
-                    {item.description}
-                  </p>
-                </div>
+        {/* Compact Minimalist 3-Column Gallery (Fits in 1 Scroll) */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
+          {editorialLookbook.map((item) => (
+            <div
+              key={item.id}
+              onClick={() => setSelectedPhoto(item)}
+              className="group cursor-pointer text-left"
+            >
+              <div className="relative aspect-[16/11] overflow-hidden bg-[#11110F] border border-[#C7A45A]/15 group-hover:border-[#C7A45A]/50 transition-colors duration-300">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover grayscale-[10%] group-hover:grayscale-0 group-hover:scale-[1.04] transition-all duration-500 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A09]/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
               </div>
-            );
-          })}
-        </div>
 
+              {/* Compact Caption */}
+              <div className="mt-2 flex items-baseline justify-between gap-2">
+                <h3 className="font-serif text-xs sm:text-sm text-[#F3EBDD] group-hover:text-[#C7A45A] transition-colors duration-300 font-normal truncate">
+                  {item.title}
+                </h3>
+                <span className="text-[8px] sm:text-[9px] tracking-[0.15em] uppercase text-[#C7A45A]/80 font-light flex-shrink-0">
+                  ✦ {item.category}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
 
       </div>
 
-      {/* Glassmorphic Lightbox Modal */}
-      {activeItem && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 opacity-0 animate-[fadeIn_0.3s_ease-out_forwards]">
-          <div 
-            className="absolute inset-0 bg-[#0e0b0a]/95 backdrop-blur-xl"
-            onClick={() => setActiveItem(null)}
-          />
-          
-          <div className="bg-[#171211] border border-[#c7a252]/30 w-full max-w-5xl rounded overflow-hidden relative z-10 flex flex-col md:flex-row shadow-[0_30px_60px_rgba(0,0,0,0.5)] transform scale-95 animate-[zoomIn_0.3s_ease-out_forwards_0.1s] opacity-0">
-            
+      {/* High-Res Lightbox Modal */}
+      {selectedPhoto && (
+        <div
+          className="fixed inset-0 z-50 bg-[#0A0A09]/95 backdrop-blur-md flex items-center justify-center p-6"
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <div
+            className="bg-[#11110F] border border-[#C7A45A]/30 max-w-3xl w-full p-6 sm:p-8 relative animate-fade-in text-left space-y-4 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
-              onClick={() => setActiveItem(null)}
-              className="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-[#0e0b0a]/80 backdrop-blur-md flex items-center justify-center text-[#f7f1e6]/60 hover:text-[#e8cd8a] hover:bg-[#c7a252]/20 transition-all border border-[#f7f1e6]/10"
+              onClick={() => setSelectedPhoto(null)}
+              className="absolute top-4 right-4 text-[#A9A399] hover:text-[#C7A45A] p-2"
             >
               <X className="w-5 h-5" />
             </button>
 
-            {/* Image Section */}
-            <div 
-              className="w-full md:w-3/5 h-64 md:h-[600px] relative"
-              style={{
-                background: activeItem.imageUrl
-                  ? `url(${activeItem.imageUrl}) center/cover no-repeat`
-                  : activeItem.gradient,
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-[#0e0b0a]/20 to-transparent" />
+            <div className="relative aspect-[16/11] overflow-hidden bg-[#0A0A09] border border-[#C7A45A]/20">
+              <img
+                src={selectedPhoto.image}
+                alt={selectedPhoto.title}
+                className="w-full h-full object-cover"
+              />
             </div>
 
-            {/* Content Section */}
-            <div className="w-full md:w-2/5 p-8 sm:p-12 flex flex-col justify-center relative">
-              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#c7a252]/5 to-transparent opacity-50 pointer-events-none" />
-              
-              <div className="relative z-10">
-                <span className="eyebrow text-[10px] text-[#e8cd8a] bg-[#c7a252]/10 border border-[#c7a252]/20 px-3 py-1.5 rounded">
-                  {activeItem.category}
-                </span>
-                
-                <h3 className="font-serif-display text-4xl sm:text-5xl italic text-[#f7f1e6] mt-6 mb-4">
-                  {activeItem.title}
+            <div className="pt-2 flex items-baseline justify-between gap-4">
+              <div>
+                <div className="editorial-label text-[10px] tracking-[0.25em] text-[#C7A45A]">
+                  {selectedPhoto.category}
+                </div>
+                <h3 className="font-serif text-2xl text-[#F3EBDD] font-normal mt-1">
+                  {selectedPhoto.title}
                 </h3>
-                
-                <div className="h-[1px] w-full bg-[#c7a252]/20 my-6" />
-
-                <div className="space-y-6">
-                  <div>
-                    <div className="text-[10px] uppercase tracking-widest text-[#f7f1e6]/40 mb-1 font-mono">Finish Type</div>
-                    <div className="font-serif-display text-xl text-[#e8cd8a]">{activeItem.finishType}</div>
-                  </div>
-                  
-                  <div>
-                    <div className="text-[10px] uppercase tracking-widest text-[#f7f1e6]/40 mb-2 font-mono">Artistry Details</div>
-                    <p className="text-[#f7f1e6]/70 font-light leading-relaxed text-sm">
-                      {activeItem.description}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                  <button
-                    onClick={() => {
-                      setActiveItem(null);
-                      const el = document.getElementById("booking");
-                      if (el) el.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="flex-1 px-6 py-4 bg-[#c7a252] text-[#0e0b0a] text-xs uppercase tracking-widest font-medium hover:bg-[#e8cd8a] transition-all flex items-center justify-center gap-2 shadow-[0_10px_20px_rgba(199,162,82,0.2)]"
-                  >
-                    <Sparkles className="w-4 h-4" />
-                    Book This Look
-                  </button>
-                  <button
-                    onClick={() => setActiveItem(null)}
-                    className="flex-1 px-6 py-4 border border-[#c7a252]/30 text-[#f7f1e6] text-xs uppercase tracking-widest hover:border-[#c7a252] transition-colors"
-                  >
-                    Return
-                  </button>
-                </div>
+                <p className="text-xs sm:text-sm text-[#A9A399] font-light mt-1 max-w-lg">
+                  {selectedPhoto.description}
+                </p>
               </div>
+              
+              <a
+                href="#booking"
+                onClick={() => setSelectedPhoto(null)}
+                className="bg-[#C7A45A] text-[#0A0A09] px-5 py-2.5 text-[11px] tracking-[0.2em] uppercase font-semibold hover:bg-[#D9B86C] transition-colors"
+              >
+                Request Look
+              </a>
             </div>
           </div>
         </div>
       )}
-      
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes zoomIn {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
-        }
-      `}</style>
     </section>
   );
 };
-

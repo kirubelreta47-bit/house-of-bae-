@@ -164,28 +164,28 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   });
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#0e0b0a]/90 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="bg-[#171211] border border-[#c7a252] max-w-4xl w-full rounded-sm p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 bg-[#0A0A09]/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
+      <div className="bg-[#11110F] border border-[#F3EBDD]/15 max-w-4xl w-full p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto animate-fade-in text-left shadow-2xl">
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 text-[#f7f1e6]/60 hover:text-[#e8cd8a]"
+          className="absolute top-6 right-6 text-[#A9A399] hover:text-[#F3EBDD] transition-colors p-1"
         >
-          <X className="w-6 h-6" />
+          <X className="w-5 h-5" />
         </button>
 
         {!authenticated ? (
           <div className="max-w-md mx-auto py-12 text-center space-y-6">
-            <div className="w-16 h-16 bg-[#c7a252]/20 border border-[#c7a252] rounded-full flex items-center justify-center mx-auto text-[#e8cd8a]">
-              <ShieldCheck className="w-8 h-8" />
+            <div className="w-14 h-14 rounded-full overflow-hidden border border-[#F3EBDD]/20 p-0.5 mx-auto bg-[#0A0A09]">
+              <img src="/house_of_bae_logo.png" alt="House of Bae" className="w-full h-full object-cover rounded-full" />
             </div>
 
             <div>
-              <div className="eyebrow text-xs">Studio Owner & Staff</div>
-              <h3 className="font-serif-display text-3xl italic text-[#f7f1e6] mt-1">
-                Studio Management Portal
+              <div className="editorial-label text-[10px] tracking-[0.3em] text-[#C7A45A]">Studio Management</div>
+              <h3 className="font-serif text-3xl text-[#F3EBDD] font-normal mt-1">
+                Staff Operations Portal
               </h3>
-              <p className="text-xs text-[#f7f1e6]/60 mt-2 font-light">
-                Please enter your staff passcode to access appointments, revenue metrics, and menu configuration.
+              <p className="text-xs text-[#A9A399] mt-2 font-light">
+                Please enter your staff passcode to access bookings, revenue metrics, and menu options.
               </p>
             </div>
 
@@ -195,11 +195,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 placeholder="Passcode (Default: bae109)"
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
-                className="w-full bg-[#0e0b0a] border border-[#c7a252]/40 text-center text-[#f7f1e6] px-4 py-3 rounded text-sm focus:outline-none focus:border-[#c7a252]"
+                className="w-full bg-[#0A0A09] border border-[#F3EBDD]/20 text-center text-[#F3EBDD] px-4 py-3 text-sm focus:outline-none focus:border-[#C7A45A] transition-colors"
               />
               <button
                 type="submit"
-                className="w-full bg-[#c7a252] text-[#0e0b0a] py-3 text-xs uppercase font-medium tracking-widest rounded hover:bg-[#e8cd8a]"
+                className="w-full bg-[#F3EBDD] text-[#0A0A09] py-3 text-xs uppercase font-medium tracking-[0.2em] hover:bg-[#C7A45A] transition-all"
               >
                 Unlock Dashboard
               </button>
@@ -208,25 +208,30 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
         ) : (
           <div className="space-y-6">
             {/* Admin Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-[#c7a252]/20 pb-4 gap-4">
-              <div>
-                <div className="eyebrow text-[10px]">House of Bae Staff Portal</div>
-                <h2 className="font-serif-display text-2xl sm:text-3xl italic text-[#f7f1e6]">
-                  Studio Operations
-                </h2>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-[#F3EBDD]/10 pb-4 gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full overflow-hidden border border-[#F3EBDD]/20 p-0.5 flex-shrink-0 bg-[#0A0A09]">
+                  <img src="/house_of_bae_logo.png" alt="House of Bae" className="w-full h-full object-cover rounded-full" />
+                </div>
+                <div>
+                  <div className="editorial-label text-[9px] tracking-[0.25em] text-[#C7A45A]">House of Bae Atelier</div>
+                  <h2 className="font-serif text-2xl sm:text-3xl text-[#F3EBDD] font-normal">
+                    Studio Operations
+                  </h2>
+                </div>
               </div>
 
               <div className="flex items-center gap-2">
                 <button
                   onClick={fetchAdminData}
-                  className="p-2 border border-[#c7a252]/30 text-[#e8cd8a] rounded hover:bg-[#c7a252]/10"
+                  className="p-2 border border-[#F3EBDD]/15 text-[#A9A399] hover:text-[#F3EBDD] hover:border-[#F3EBDD]/40 transition-colors"
                   title="Refresh Data"
                 >
                   <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
                 </button>
                 <button
                   onClick={() => setAuthenticated(false)}
-                  className="text-xs text-[#f7f1e6]/50 hover:text-red-400 px-3 py-2 border border-red-950 rounded"
+                  className="text-xs text-[#A9A399]/60 hover:text-red-400 px-3 py-2 border border-[#F3EBDD]/10 transition-colors"
                 >
                   Lock Portal
                 </button>
@@ -234,23 +239,23 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex flex-wrap gap-2 border-b border-[#c7a252]/10 pb-2">
+            <div className="flex flex-wrap gap-2 border-b border-[#F3EBDD]/10 pb-2">
               <button
                 onClick={() => setActiveTab("bookings")}
-                className={`px-4 py-2 text-xs uppercase tracking-wider rounded font-medium transition-colors ${
+                className={`px-4 py-2 text-xs uppercase tracking-wider font-medium transition-colors ${
                   activeTab === "bookings"
-                    ? "bg-[#c7a252] text-[#0e0b0a]"
-                    : "text-[#f7f1e6]/70 hover:text-[#e8cd8a]"
+                    ? "bg-[#F3EBDD] text-[#0A0A09]"
+                    : "text-[#A9A399] hover:text-[#F3EBDD]"
                 }`}
               >
                 Appointments ({bookings.length})
               </button>
               <button
                 onClick={() => setActiveTab("services")}
-                className={`px-4 py-2 text-xs uppercase tracking-wider rounded font-medium transition-colors ${
+                className={`px-4 py-2 text-xs uppercase tracking-wider font-medium transition-colors ${
                   activeTab === "services"
-                    ? "bg-[#c7a252] text-[#0e0b0a]"
-                    : "text-[#f7f1e6]/70 hover:text-[#e8cd8a]"
+                    ? "bg-[#F3EBDD] text-[#0A0A09]"
+                    : "text-[#A9A399] hover:text-[#F3EBDD]"
                 }`}
               >
                 Menu & Pricing ({services.length})

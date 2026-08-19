@@ -2,113 +2,91 @@
 
 @layer base {
   :root {
-    --ink: #0e0b0a;
-    --charcoal: #171211;
-    --charcoal-2: #211a18;
-    --gold: #c7a252;
-    --gold-bright: #e8cd8a;
-    --nude: #e6d3b8;
-    --cream: #f7f1e6;
-    --mocha: #8a6a4f;
-    --line: rgba(199, 162, 82, 0.28);
+    --bg-primary: #0A0A09;
+    --bg-surface: #11110F;
+    --bg-elevated: #161614;
+    --text-primary: #F3EBDD;
+    --text-muted: #A9A399;
+    --gold-accent: #C7A45A;
+    --gold-subtle: rgba(199, 164, 90, 0.25);
+    --border-subtle: rgba(243, 235, 221, 0.08);
+    --border-gold: rgba(199, 164, 90, 0.35);
   }
 
   html {
     scroll-behavior: smooth;
-    background-color: var(--ink);
-    color: var(--cream);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
   }
 
   body {
-    font-family: 'Jost', sans-serif;
+    font-family: 'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 300;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    background-color: var(--ink);
-    color: var(--cream);
-  }
-
-  h1, h2, h3, .font-serif-display {
-    font-family: 'Bodoni Moda', serif;
-    font-weight: 500;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     letter-spacing: 0.01em;
   }
+
+  h1, h2, h3, h4, .font-serif, .font-editorial {
+    font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+    font-weight: 300;
+    letter-spacing: -0.015em;
+  }
 }
 
-.eyebrow {
-  font-family: 'Jost', sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.32em;
+/* Subtle editorial label */
+.editorial-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-accent);
 }
 
-.gold-gradient-text {
-  background: linear-gradient(180deg, var(--cream) 20%, var(--gold-bright) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* Refined Gold Shimmer/Accent */
+.gold-text {
+  color: var(--gold-accent);
 }
 
-/* Background Animations */
-@keyframes breathe {
-  0%, 100% {
-    transform: translateX(-50%) scale(1);
-    opacity: 0.55;
+.gold-border {
+  border-color: var(--border-gold);
+}
+
+.gold-glow {
+  box-shadow: 0 0 25px rgba(199, 164, 90, 0.12);
+}
+
+/* Subtle fade in utility */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
-  50% {
-    transform: translateX(-50%) scale(1.08);
-    opacity: 0.9;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
-.animate-breathe {
-  animation: breathe 8s ease-in-out infinite;
+
+.animate-fade-in {
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes float {
-  0% { transform: translateY(0) translateX(0); }
-  33% { transform: translateY(-40vh) translateX(15px); }
-  66% { transform: translateY(-80vh) translateX(-15px); }
-  100% { transform: translateY(-120vh) translateX(0); }
-}
-.animate-float {
-  animation-name: float;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 1; }
-}
-.animate-twinkle {
-  animation-name: twinkle;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
-
-@keyframes scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-.animate-marquee {
-  display: inline-flex;
-  gap: 2.5rem;
-  animation: scroll 26s linear infinite;
-}
-
-/* Custom Scrollbar */
+/* Clean minimal scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #0e0b0a;
+  background: #0A0A09;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(199, 162, 82, 0.3);
-  border-radius: 3px;
+  background: #252422;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(199, 162, 82, 0.6);
+  background: var(--gold-accent);
 }

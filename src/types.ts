@@ -50,10 +50,33 @@ export interface TimeSlotStatus {
   available: boolean;
 }
 
+export interface ExpenseItem {
+  id: string;
+  name: string;
+  category: "Supplies" | "Equipment" | "Tools" | "Marketing" | "Rent/Utilities" | "Other";
+  price: number;
+  isPurchased: boolean;
+  createdAt: string;
+}
+
+export interface WeeklyDayData {
+  day: string; // Mon, Tue, Wed, Thu, Fri, Sat, Sun
+  fullDate: string;
+  revenue: number;
+  bookingCount: number;
+}
+
 export interface AdminStats {
   totalBookings: number;
   totalRevenueETB: number;
+  thisMonthRevenueETB: number;
+  thisWeekRevenueETB: number;
+  todayRevenueETB: number;
+  totalExpensesETB: number;
+  plannedExpensesETB: number;
+  netProfitETB: number;
   pendingCount: number;
   confirmedCount: number;
   totalServicesCount: number;
+  weeklyBreakdown: WeeklyDayData[];
 }

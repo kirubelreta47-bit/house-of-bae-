@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Sparkles, Calendar, Search, ShieldCheck, Menu, X, Phone } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Search, Menu, X } from "lucide-react";
 
 interface HeaderProps {
   onOpenBookingModal: () => void;
@@ -12,7 +12,17 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenLookupModal,
   onOpenAdminModal,
 }) => {
+  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 30);
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const scrollTo = (id: string) => {
     setMobileMenuOpen(false);
@@ -23,121 +33,175 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-[#0e0b0a]/95 via-[#0e0b0a]/80 to-transparent backdrop-blur-md border-b border-[#c7a252]/15 transition-all py-4">
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-        {/* Brand Logo */}
-        <a href="#" className="font-serif-display text-xl sm:text-2xl tracking-wide italic text-[#f7f1e6] flex items-center gap-2 group">
-          <span>house</span> <b className="not-italic text-[#c7a252]">of</b> <span>bae</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#c7a252] group-hover:scale-125 transition-transform" />
-        </a>
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled
+          ? "bg-[#0A0A09]/95 backdrop-blur-md border-b border-[#F3EBDD]/10 py-4 shadow-sm"
+          : "bg-transparent border-b border-transparent py-6 sm:py-7"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        
+        {/* Left: Refined Wordmark with Logo from Public Folder */}
+        <div className="flex items-center">
+          <a
+            href="#"
+            className="group flex items-center gap-2.5 sm:gap-3 transition-opacity hover:opacity-90"
+          >
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-[#C7A45A]/40 p-0.5 flex-shrink-0 bg-[#0A0A09] shadow-[0_0_12px_rgba(199,164,90,0.15)] group-hover:border-[#C7A45A] transition-colors">
+              <img
+                src="/house_of_bae_logo.png"
+                alt="House of Bae Logo"
+                className="w-full h-full object-cover rounded-full"
+              />
+            </div>
+            <div className="flex flex-col items-start">
+              <span className="font-serif text-lg sm:text-2xl tracking-[0.08em] font-normal text-[#F3EBDD] leading-none uppercase">
+                House of <span className="text-[#C7A45A]">Bae</span>
+              </span>
+              <span className="text-[8px] sm:text-[9px] tracking-[0.3em] sm:tracking-[0.35em] text-[#C7A45A]/80 uppercase font-light mt-0.5 sm:mt-1 pl-0.5">
+                Atelier · Lideta
+              </span>
+            </div>
+          </a>
+        </div>
 
-        {/* Desktop Navlinks */}
-        <nav className="hidden md:flex items-center gap-8 text-xs tracking-widest uppercase font-light text-[#f7f1e6]/80">
-          <button onClick={() => scrollTo("services")} className="hover:text-[#e8cd8a] transition-colors">
+        {/* Center: Editorial Navigation Links with subtle gold hover underlines */}
+        <nav className="hidden md:flex items-center gap-9 text-[12px] tracking-[0.18em] uppercase text-[#A9A399] font-normal">
+          <button
+            onClick={() => scrollTo("services")}
+            className="hover:text-[#C7A45A] transition-colors duration-300 relative py-1 hover:tracking-[0.2em] transition-all"
+          >
             Services
           </button>
-          <button onClick={() => scrollTo("gallery")} className="hover:text-[#e8cd8a] transition-colors">
+          <button
+            onClick={() => scrollTo("philosophy")}
+            className="hover:text-[#C7A45A] transition-colors duration-300 relative py-1 hover:tracking-[0.2em] transition-all"
+          >
+            Philosophy
+          </button>
+          <button
+            onClick={() => scrollTo("gallery")}
+            className="hover:text-[#C7A45A] transition-colors duration-300 relative py-1 hover:tracking-[0.2em] transition-all"
+          >
             Gallery
           </button>
-          <button onClick={() => scrollTo("booking")} className="hover:text-[#e8cd8a] transition-colors">
-            Booking
-          </button>
-          <button onClick={() => scrollTo("location")} className="hover:text-[#e8cd8a] transition-colors">
+          <button
+            onClick={() => scrollTo("location")}
+            className="hover:text-[#C7A45A] transition-colors duration-300 relative py-1 hover:tracking-[0.2em] transition-all"
+          >
             Location
           </button>
         </nav>
 
-        {/* Action Buttons */}
-        <div className="hidden sm:flex items-center gap-3">
+        {/* Right: Actions */}
+        <div className="flex items-center gap-5 sm:gap-6">
+          {/* Subtle My Appointment link */}
           <button
             onClick={onOpenLookupModal}
-            className="text-xs text-[#f7f1e6]/70 hover:text-[#e8cd8a] flex items-center gap-1.5 px-3 py-2 border border-[#c7a252]/20 hover:border-[#c7a252]/50 rounded transition-colors"
-            title="Lookup existing appointment"
+            className="hidden sm:flex items-center gap-1.5 text-[11px] tracking-[0.18em] uppercase text-[#A9A399] hover:text-[#C7A45A] transition-colors duration-300 group"
           >
-            <Search className="w-3.5 h-3.5 text-[#c7a252]" />
+            <Search className="w-3.5 h-3.5 text-[#C7A45A] group-hover:scale-110 transition-transform" />
             <span>My Appointment</span>
           </button>
 
+          {/* Primary Book Now CTA in Champagne Gold */}
           <button
             onClick={onOpenBookingModal}
-            className="border border-[#c7a252] text-[#e8cd8a] hover:bg-[#c7a252] hover:text-[#0e0b0a] px-5 py-2 text-xs uppercase tracking-widest font-medium rounded transition-all duration-300 shadow-sm hover:shadow-[0_0_15px_rgba(199,162,82,0.3)]"
+            className="bg-[#C7A45A] text-[#0A0A09] px-5 sm:px-6 py-2.5 sm:py-2.5 text-[11px] sm:text-xs tracking-[0.2em] uppercase font-semibold rounded-none hover:bg-[#D9B86C] hover:shadow-[0_2px_15px_rgba(199,164,90,0.25)] transition-all duration-300 active:scale-95"
           >
             Book Now
           </button>
 
-          <button
-            onClick={onOpenAdminModal}
-            className="text-[#f7f1e6]/40 hover:text-[#c7a252] p-2 rounded transition-colors"
-            title="Studio Admin Access"
-          >
-            <ShieldCheck className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Mobile Toggle */}
-        <div className="flex sm:hidden items-center gap-2">
-          <button
-            onClick={onOpenBookingModal}
-            className="border border-[#c7a252] text-[#e8cd8a] px-3 py-1.5 text-[11px] uppercase tracking-wider rounded font-medium"
-          >
-            Book
-          </button>
+          {/* Mobile Menu Trigger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-[#f7f1e6] focus:outline-none"
-            aria-label="Toggle Navigation"
+            className="md:hidden text-[#C7A45A] p-1 focus:outline-none"
+            aria-label="Toggle navigation"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6 text-[#c7a252]" /> : <Menu className="w-6 h-6 text-[#c7a252]" />}
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Minimalist Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="sm:hidden bg-[#171211] border-b border-[#c7a252]/20 px-6 py-6 mt-2 flex flex-col gap-4 animate-in slide-in-from-top duration-200">
-          <button
-            onClick={() => scrollTo("services")}
-            className="text-left py-2 text-sm uppercase tracking-widest text-[#f7f1e6] border-b border-[#c7a252]/10"
-          >
-            Services & Pricing
-          </button>
-          <button
-            onClick={() => scrollTo("gallery")}
-            className="text-left py-2 text-sm uppercase tracking-widest text-[#f7f1e6] border-b border-[#c7a252]/10"
-          >
-            Polish & Swatch Gallery
-          </button>
-          <button
-            onClick={() => scrollTo("booking")}
-            className="text-left py-2 text-sm uppercase tracking-widest text-[#f7f1e6] border-b border-[#c7a252]/10"
-          >
-            Reserve Slot
-          </button>
-          <button
-            onClick={() => scrollTo("location")}
-            className="text-left py-2 text-sm uppercase tracking-widest text-[#f7f1e6] border-b border-[#c7a252]/10"
-          >
-            Studio Location & Hours
-          </button>
+        <div className="md:hidden fixed inset-x-0 top-[70px] bg-[#0A0A09] border-b border-[#F3EBDD]/10 px-8 py-8 flex flex-col gap-6 animate-fade-in shadow-2xl">
+          <div className="flex items-center gap-3 pb-3 border-b border-[#F3EBDD]/10">
+            <div className="w-9 h-9 rounded-full overflow-hidden border border-[#C7A45A]/40 p-0.5 bg-[#0A0A09]">
+              <img
+                src="/house_of_bae_logo.png"
+                alt="House of Bae Logo"
+                className="w-full h-full object-cover rounded-full"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-serif text-lg tracking-[0.08em] text-[#F3EBDD] uppercase">
+                House of <span className="text-[#C7A45A]">Bae</span>
+              </span>
+              <span className="text-[8px] tracking-[0.3em] text-[#C7A45A]/80 uppercase">
+                Atelier · Lideta
+              </span>
+            </div>
+          </div>
 
-          <div className="pt-2 flex flex-col gap-2.5">
+          <div className="flex flex-col gap-4 text-xs tracking-[0.22em] uppercase text-[#A9A399]">
+            <button
+              onClick={() => scrollTo("services")}
+              className="text-left py-2 hover:text-[#F3EBDD] border-b border-[#F3EBDD]/5"
+            >
+              Services
+            </button>
+            <button
+              onClick={() => scrollTo("philosophy")}
+              className="text-left py-2 hover:text-[#F3EBDD] border-b border-[#F3EBDD]/5"
+            >
+              Philosophy
+            </button>
+            <button
+              onClick={() => scrollTo("gallery")}
+              className="text-left py-2 hover:text-[#F3EBDD] border-b border-[#F3EBDD]/5"
+            >
+              Gallery
+            </button>
+            <button
+              onClick={() => scrollTo("location")}
+              className="text-left py-2 hover:text-[#F3EBDD] border-b border-[#F3EBDD]/5"
+            >
+              Location & Hours
+            </button>
+          </div>
+
+          <div className="pt-2 flex flex-col gap-3">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenBookingModal();
+              }}
+              className="w-full bg-[#F3EBDD] text-[#0A0A09] py-3.5 text-xs tracking-[0.2em] uppercase font-medium"
+            >
+              Book An Appointment
+            </button>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenLookupModal();
               }}
-              className="w-full py-2.5 text-xs text-center border border-[#c7a252]/30 rounded text-[#e8cd8a] flex items-center justify-center gap-2"
+              className="w-full py-3 text-xs tracking-[0.18em] uppercase text-[#A9A399] border border-[#F3EBDD]/15 hover:text-[#F3EBDD]"
             >
-              <Search className="w-4 h-4" /> Lookup Appointment
+              Check My Appointment
             </button>
+          </div>
+
+          <div className="pt-4 text-center">
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenAdminModal();
               }}
-              className="w-full py-2 text-xs text-center text-[#f7f1e6]/50 flex items-center justify-center gap-1.5"
+              className="text-[10px] tracking-[0.2em] uppercase text-[#A9A399]/40 hover:text-[#A9A399]"
             >
-              <ShieldCheck className="w-3.5 h-3.5" /> Staff Portal
+              Staff Portal
             </button>
           </div>
         </div>
